@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>cerrar sesion</h1>
+<div>
+    <div class="alert alert-success text-center mt-4">
+        <h2>haz cerrado el sesion correctamente</h2>
+        <a href="{% url 'login' %}">connectar</a>
+    </div>
+</div>
+{% endblock content %}

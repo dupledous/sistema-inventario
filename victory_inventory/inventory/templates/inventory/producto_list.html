@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<button><a href="{% url 'inventory:producto_crear' %}">anadir producto</a></button>
+{% if producto_list %}
+<table class="table">
+    <thead class="table table-dark">
+        <tr>
+            <th>id</th>
+            <th>nombre</th>
+            <th>descripcion</th>
+            <th>precio</th>
+            <th>stock</th>
+            <th>image</th>
+            <th>fecha_creacion</th>
+        </tr>
+    </thead>
+    {% for p in producto_list %}
+    <tbody>
+        <tr>
+            <td>{{p.id}}</td>
+            <td>{{p.nombre}}</td>
+            <td>{{p.descripcion}}</td>
+            <td>{{p.precio}}</td>
+            <td>{{p.stock}}</td>
+            <td><img src='{{p.imagen.url}}' height ='50'/></td>
+            <td>{{p.fecha_creacion}}</td>
+            <td>
+                <a href="{% url "inventory:producto_update" p.id %}"class = "btn btn-sm btn-warning">actualizar</a>
+                <a href="{% url "inventory:producto_delete" p.id %}" class = "btn btn-sm btn-danger">eliminar</a>
+                
+            </td>
+
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+{% else %}
+<div class="bg-primary text-white p-3 text-center">
+    <p>no hay productos</p>
+</div>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Dashboard · Victory Inventory</title>
+{% endblock %}
+
+{% block content %}
+
+<h2 class="text-center mb-4">Dashboard del Inventario</h2>
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card text-bg-primary p-3">
+            <h5>Total Productos</h5>
+            <h2>{{ total_producto }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-warning p-3">
+            <h5>Stock Bajo (&lt;5)</h5>
+            <h2>{{ stock_menor }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-info p-3">
+            <h5>Stock Medio (5–20)</h5>
+            <h2>{{ stock_medio }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-success p-3">
+            <h5>Stock Alto (&gt;20)</h5>
+            <h2>{{ stock_alto }}</h2>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row mb-4">
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5 class="text-center">Stock General</h5>
+            <canvas id="grafico_barras" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5 class="text-center">Productos Agregados por Mes</h5>
+            <canvas id="grafico_lineas" height="200"></canvas>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="card p-3">
+    <h5>Últimos 5 productos agregados</h5>
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for p in ultimo_5_productos %}
+            <tr>
+                <td>{{ p.nombre }}</td>
+                <td>${{ p.precio }}</td>
+                <td>{{ p.fecha_creacion }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!-- ========================== GRÁFICO DE BARRAS ======================= -->
+
+<script>
+const ctxBar = document.getElementById("grafico_barras").getContext("2d");
+new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+        labels: ['Stock Bajo', 'Stock Medio', 'Stock Alto', 'Precio Promedio'],
+        datasets: [{
+            label: 'Inventario',
+            data: [
+                {{ stock_menor }},
+                {{ stock_medio }},
+                {{ stock_alto }},
+                {{ promedio_precio|floatformat:0 }}
+            ],
+            backgroundColor: [
+                'rgba(255,99,132,0.5)',
+                'rgba(255,205,86,0.5)',
+                'rgba(54,162,235,0.5)',
+                'rgba(75,192,192,0.5)'
+            ],
+            borderColor: [
+                'rgb(255,99,132)',
+                'rgb(255,205,86)',
+                'rgb(54,162,235)',
+                'rgb(75,192,192)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+
+
+<!-- ========================== GRÁFICO DE LÍNEA ======================= -->
+
+<script>
+const ctxLine = document.getElementById("grafico_lineas").getContext("2d");
+
+const meses_labels = [
+    {% for m in agregado_mes %}
+        "{{ m.mes_a|date:'M Y' }}",
+    {% endfor %}
+];
+
+const meses_valores = [
+    {% for m in agregado_mes %}
+        {{ m.cantidad }},
+    {% endfor %}
+];
+
+new Chart(ctxLine, {
+    type: 'line',
+    data: {
+        labels: meses_labels,
+        datasets: [{
+            label: 'Agregados por Mes',
+            data: meses_valores,
+            borderColor: 'rgba(26, 52, 219, 0.8)',
+            backgroundColor: 'rgba(75,192,192,0.3)',
+            borderWidth: 2,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4 text-center">
+    <h5> seguro desea eliminar</h5>
+    <form method='post' action=''>
+        {% csrf_token %}
+        <button type='submit' class="btn btn-danger">si eliminar</button>
+        <a href="{% url 'inventory:producto_view' %}">cancelar</a>
+    </form>
+
+</div>
+
+{% endblock content %}

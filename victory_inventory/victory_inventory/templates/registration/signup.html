@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_tags %}
+{% block content %}
+<div>
+    <div>
+        <h2 class="text-center mb-4">i</h2>
+        {% comment "manejo de error" %}{% endcomment %}
+        {% if form.errors %}
+        <div>
+            {% for field in form  %}
+            {% for error in field.errors %}
+            <div>{{error}}</div>
+            {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+            <div>{{error}}</div>
+            {% endfor %}
+        </div>
+
+
+        {% endif %}
+        
+        <form method='post' action='' novalidate>
+            {% csrf_token %}
+            <div>
+                <label for='{{form.username.id_for_label}}' class="form-label">nombre de usuario</label>
+                {{form.username|add_class:'form-control'}}
+            </div>
+            <div>
+                <label for='{{form.password1.id_for_label}}' class="form-label">ingresa el password</label>
+                {{form.password1|add_class:'form-control'}}
+            </div>
+            <div>
+                <label for='{{form.password2.id_for_label}}' class="form-label">reingresar el password</label>
+                {{form.password2|add_class:'form-control'}}
+            </div>
+            <button type='submit' class="btn btn-primary">registrar</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='container mt-4 bg-primary'>
+  {% if form.errors %}
+  <div class="alert alert-danger">
+    corriger los errores antes de continuar
+  </div>
+  {% endif %}
+  <form action='' method='post' enctype = 'multipart/form-data'>
+    {% csrf_token %}
+    {% for f in form %}
+    <label class="form-label">{{f.label}}</label>
+    {{f}}</br>
+    {% endfor %}
+    <button type='submit' class='btn btn-primary'>crear</button>
+  </form>
+</div>
+{% endblock content %}
